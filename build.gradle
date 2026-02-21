@@ -1,55 +1,53 @@
 plugins {
     id 'java'
-    id("xyz.jpenilla.run-paper") version "2.3.1"
+    id 'com.gradleup.shadow' version '8.3.0'
 }
 
-group = 'pl.tenfajnybartek'
+group = 'pl.tenfajnybartek.riftdeposit'
 version = '1.0.0'
+description = 'riftDeposit — inventory limits & deposit for HC servers'
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_21
+    targetCompatibility = JavaVersion.VERSION_21
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(21)
+    }
+}
 
 repositories {
     mavenCentral()
     maven {
-        name = "papermc-repo"
-        url = "https://repo.papermc.io/repository/maven-public/"
+        name = 'papermc'
+        url = 'https://repo.papermc.io/repository/maven-public/'
     }
 }
 
 dependencies {
-    compileOnly("io.papermc.paper:paper-api:1.21-R0.1-SNAPSHOT")
+    compileOnly 'io.papermc.paper:paper-api:1.21.1-R0.1-SNAPSHOT'
+
+    // HikariCP — connection pooling
+    implementation 'com.zaxxer:HikariCP:5.1.0'
+
+    // MySQL JDBC driver
+    implementation 'com.mysql:mysql-connector-j:8.3.0'
 }
 
-tasks {
-    runServer {
-        // Configure the Minecraft version for our task.
-        // This is the only required configuration besides applying the plugin.
-        // Your plugin's jar (or shadowJar if present) will be used automatically.
-        minecraftVersion("1.21")
+shadowJar {
+    archiveClassifier.set('')
+    // Relocate to avoid conflicts with other plugins
+    relocate 'com.zaxxer.hikari',    'pl.tenfajnybartek.riftdeposit.libs.hikari'
+    relocate 'com.mysql',            'pl.tenfajnybartek.riftdeposit.libs.mysql'
+    relocate 'com.google.protobuf',  'pl.tenfajnybartek.riftdeposit.libs.protobuf'
+
+    minimize {
+        exclude(dependency('com.mysql:.*'))
     }
 }
 
-def targetJavaVersion = 21
-java {
-    def javaVersion = JavaVersion.toVersion(targetJavaVersion)
-    sourceCompatibility = javaVersion
-    targetCompatibility = javaVersion
-    if (JavaVersion.current() < javaVersion) {
-        toolchain.languageVersion = JavaLanguageVersion.of(targetJavaVersion)
-    }
-}
+tasks.build.dependsOn tasks.shadowJar
 
 tasks.withType(JavaCompile).configureEach {
     options.encoding = 'UTF-8'
-
-    if (targetJavaVersion >= 10 || JavaVersion.current().isJava10Compatible()) {
-        options.release.set(targetJavaVersion)
-    }
-}
-
-processResources {
-    def props = [version: version]
-    inputs.properties props
-    filteringCharset 'UTF-8'
-    filesMatching('plugin.yml') {
-        expand props
-    }
+    options.compilerArgs << '-parameters'
 }

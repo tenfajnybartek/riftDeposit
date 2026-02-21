@@ -2,5 +2,42 @@ name: riftDeposit
 version: '1.0.0'
 main: pl.tenfajnybartek.riftdeposit.base.DepositPlugin
 api-version: '1.21'
+description: Inventory limits & deposit vault for HC/EasyHC servers
 authors: [ tenfajnybartek ]
-description: Plugin na gildie
+website: ''
+
+commands:
+  schowek:
+    description: Opens your deposit vault
+    usage: /schowek
+    aliases: [ depozyt, deposit, vault, dep ]
+  rdadmin:
+    description: RiftDeposit admin commands
+    usage: /rdadmin <reload|inspect|clear|give>
+    permission: riftdeposit.admin
+
+permissions:
+  riftdeposit.use:
+    description: Allows opening the deposit vault
+    default: true
+
+  riftdeposit.bypass:
+    description: Bypasses all item limits (items won't be moved to deposit)
+    default: op
+
+  riftdeposit.admin:
+    description: Access to /rdadmin commands
+    default: op
+
+  # ── Limit groups — check order: highest priority wins ──
+  riftdeposit.limits.svip:
+    description: SVIP item limits
+    default: false
+
+  riftdeposit.limits.vip:
+    description: VIP item limits
+    default: false
+
+  riftdeposit.limits.default:
+    description: Default item limits (assigned automatically)
+    default: true

@@ -1,0 +1,430 @@
+# ──────────────────────────────────────────────────────────────────────────────
+#  RiftDeposit  ·  config.yml
+#
+#  POTION ITEM DEFINICJA — sekcja `potion:`
+#  ─────────────────────────────────────────
+#  effect-type        Typ efektu (wymagany).  Nazwa angielska — lista niżej.
+#  amplifier          0 = poziom I,  1 = poziom II  (opcjonalne — brak = każdy poziom)
+#  duration-ticks     Dokładny czas w tickach (20 ticków = 1 sekunda).
+#                     Alternatywa: min-duration-ticks i max-duration-ticks (zakres).
+#
+#  NAZWY EFEKTÓW (effect-type):
+#   SPEED, SLOWNESS, HASTE, MINING_FATIGUE, STRENGTH, INSTANT_HEALTH,
+#   INSTANT_DAMAGE, JUMP_BOOST, NAUSEA, REGENERATION, RESISTANCE,
+#   FIRE_RESISTANCE, WATER_BREATHING, INVISIBILITY, BLINDNESS,
+#   NIGHT_VISION, HUNGER, WEAKNESS, POISON, WITHER,
+#   HEALTH_BOOST, ABSORPTION, SATURATION, GLOWING, LEVITATION,
+#   LUCK, UNLUCK, SLOW_FALLING, CONDUIT_POWER, DOLPHINS_GRACE,
+#   BAD_OMEN, HERO_OF_THE_VILLAGE, DARKNESS
+#
+#  CZASY STANDARDOWYCH POTEK (ticki):
+#   Potka zwykła:        3600 (3:00)   →  duration-ticks: 3600
+#   Potka wzmocniona:    1800 (1:30)   →  duration-ticks: 1800
+#   Potka przedłużona:   9600 (8:00)   →  duration-ticks: 9600
+#   Instant Healing:        1 (natych.) →  duration-ticks: 1
+# ──────────────────────────────────────────────────────────────────────────────
+
+storage:
+  type: YAML          # YAML lub MYSQL
+
+  mysql:
+    host: localhost
+    port: 3306
+    database: riftdeposit
+    username: root
+    password: password
+    pool-size: 10
+    connection-timeout: 5000
+
+deposit:
+  check-interval-ticks: 20   # co ile ticków sprawdzamy ekwipunek (min: 5)
+
+# ── Grupy limitów ─────────────────────────────────────────────────────────────
+# Sprawdzane malejąco po priority — pierwsza dopasowana grupa wygrywa.
+# permission: null = zawsze pasuje (fallback/default)
+groups:
+  svip:
+    permission: riftdeposit.limits.svip
+    priority: 30
+  vip:
+    permission: riftdeposit.limits.vip
+    priority: 20
+  default:
+    permission: null
+    priority: 0
+
+# ── Przedmioty ────────────────────────────────────────────────────────────────
+items:
+
+  # ════════════════════════════════════════════════════════
+  #  HEALING POTIONS
+  # ════════════════════════════════════════════════════════
+
+  # Natychmiastowe leczenie I (zwykła potka healing)
+  # /give @p potion{Potion:{Id:healing}} — standardowa receptura
+  healing_i:
+    material: POTION
+    display-name: "<red>❤ Healing I <dark_gray>(instant)"
+    slot: 10
+    potion:
+      effect-type: INSTANT_HEALTH
+      amplifier: 0              # poziom I
+      # duration-ticks nie filtrujemy — instant health zawsze ma ticks=1
+    limits:
+      default: 4
+      vip: 6
+      svip: 8
+
+  # Natychmiastowe leczenie II (strong healing)
+  healing_ii:
+    material: POTION
+    display-name: "<red>❤❤ Healing II <dark_gray>(instant)"
+    slot: 11
+    potion:
+      effect-type: INSTANT_HEALTH
+      amplifier: 1              # poziom II
+    limits:
+      default: 2
+      vip: 4
+      svip: 6
+
+  # Splash Healing I
+  splash_healing_i:
+    material: SPLASH_POTION
+    display-name: "<red>💥 Splash Healing I"
+    slot: 12
+    potion:
+      effect-type: INSTANT_HEALTH
+      amplifier: 0
+    limits:
+      default: 2
+      vip: 3
+      svip: 4
+
+  # Splash Healing II
+  splash_healing_ii:
+    material: SPLASH_POTION
+    display-name: "<red>💥 Splash Healing II"
+    slot: 13
+    potion:
+      effect-type: INSTANT_HEALTH
+      amplifier: 1
+    limits:
+      default: 1
+      vip: 2
+      svip: 3
+
+  # ════════════════════════════════════════════════════════
+  #  REGENERATION
+  # ════════════════════════════════════════════════════════
+
+  # Regeneracja I, 0:45 (standardowa)
+  regen_i:
+    material: POTION
+    display-name: "<light_pink>🌿 Regeneracja I <dark_gray>(0:45)"
+    slot: 14
+    potion:
+      effect-type: REGENERATION
+      amplifier: 0
+      duration-ticks: 900       # 45 sekund
+    limits:
+      default: 2
+      vip: 3
+      svip: 4
+
+  # Regeneracja I, 2:00 (extended)
+  regen_i_long:
+    material: POTION
+    display-name: "<light_pink>🌿 Regeneracja I <dark_gray>(2:00 ext.)"
+    slot: 15
+    potion:
+      effect-type: REGENERATION
+      amplifier: 0
+      duration-ticks: 2400      # 2 minuty
+    limits:
+      default: 1
+      vip: 2
+      svip: 3
+
+  # Regeneracja II, 0:22 (strong)
+  regen_ii:
+    material: POTION
+    display-name: "<light_pink>🌿🌿 Regeneracja II <dark_gray>(0:22)"
+    slot: 16
+    potion:
+      effect-type: REGENERATION
+      amplifier: 1
+      duration-ticks: 440       # ~22 sekund
+    limits:
+      default: 1
+      vip: 2
+      svip: 3
+
+  # ════════════════════════════════════════════════════════
+  #  STRENGTH
+  # ════════════════════════════════════════════════════════
+
+  # Siła I, 3:00 (standardowa)
+  strength_i:
+    material: POTION
+    display-name: "<dark_red>⚔ Siła I <dark_gray>(3:00)"
+    slot: 19
+    potion:
+      effect-type: STRENGTH
+      amplifier: 0
+      duration-ticks: 3600      # 3 minuty
+    limits:
+      default: 2
+      vip: 3
+      svip: 4
+
+  # Siła I, 8:00 (extended)
+  strength_i_long:
+    material: POTION
+    display-name: "<dark_red>⚔ Siła I <dark_gray>(8:00 ext.)"
+    slot: 20
+    potion:
+      effect-type: STRENGTH
+      amplifier: 0
+      duration-ticks: 9600      # 8 minut
+    limits:
+      default: 1
+      vip: 2
+      svip: 3
+
+  # Siła II, 1:30 (strong)
+  strength_ii:
+    material: POTION
+    display-name: "<dark_red>⚔⚔ Siła II <dark_gray>(1:30)"
+    slot: 21
+    potion:
+      effect-type: STRENGTH
+      amplifier: 1
+      duration-ticks: 1800      # 1:30
+    limits:
+      default: 1
+      vip: 2
+      svip: 3
+
+  # Splash Siła II
+  splash_strength_ii:
+    material: SPLASH_POTION
+    display-name: "<dark_red>💥 Splash Siła II"
+    slot: 22
+    potion:
+      effect-type: STRENGTH
+      amplifier: 1
+    limits:
+      default: 1
+      vip: 2
+      svip: 2
+
+  # ════════════════════════════════════════════════════════
+  #  SPEED
+  # ════════════════════════════════════════════════════════
+
+  # Szybkość I, 3:00
+  speed_i:
+    material: POTION
+    display-name: "<yellow>👟 Szybkość I <dark_gray>(3:00)"
+    slot: 23
+    potion:
+      effect-type: SPEED
+      amplifier: 0
+      duration-ticks: 3600
+    limits:
+      default: 2
+      vip: 3
+      svip: 4
+
+  # Szybkość II, 1:30
+  speed_ii:
+    material: POTION
+    display-name: "<yellow>👟👟 Szybkość II <dark_gray>(1:30)"
+    slot: 24
+    potion:
+      effect-type: SPEED
+      amplifier: 1
+      duration-ticks: 1800
+    limits:
+      default: 1
+      vip: 2
+      svip: 3
+
+  # ════════════════════════════════════════════════════════
+  #  FIRE RESISTANCE
+  # ════════════════════════════════════════════════════════
+
+  fire_resistance:
+    material: POTION
+    display-name: "<gold>🔥 Odporność na Ogień <dark_gray>(3:00)"
+    slot: 25
+    potion:
+      effect-type: FIRE_RESISTANCE
+      amplifier: 0
+      duration-ticks: 3600
+    limits:
+      default: 2
+      vip: 3
+      svip: 4
+
+  fire_resistance_long:
+    material: POTION
+    display-name: "<gold>🔥 Odporność na Ogień <dark_gray>(8:00 ext.)"
+    slot: 26
+    potion:
+      effect-type: FIRE_RESISTANCE
+      amplifier: 0
+      duration-ticks: 9600
+    limits:
+      default: 1
+      vip: 2
+      svip: 3
+
+  # ════════════════════════════════════════════════════════
+  #  WEAKNESS (anty-gapple)
+  # ════════════════════════════════════════════════════════
+
+  # Splash Słabość I, 1:30
+  splash_weakness:
+    material: SPLASH_POTION
+    display-name: "<gray>🌑 Splash Słabość I <dark_gray>(1:30)"
+    slot: 28
+    potion:
+      effect-type: WEAKNESS
+      amplifier: 0
+      duration-ticks: 1800
+    limits:
+      default: 4
+      vip: 6
+      svip: 8
+
+  # Splash Słabość I, 4:00 (extended)
+  splash_weakness_long:
+    material: SPLASH_POTION
+    display-name: "<gray>🌑 Splash Słabość I <dark_gray>(4:00 ext.)"
+    slot: 29
+    potion:
+      effect-type: WEAKNESS
+      amplifier: 0
+      duration-ticks: 4800
+    limits:
+      default: 2
+      vip: 3
+      svip: 4
+
+  # ════════════════════════════════════════════════════════
+  #  COMBAT ITEMS (bez potionSpec)
+  # ════════════════════════════════════════════════════════
+
+  golden_apple:
+    material: GOLDEN_APPLE
+    display-name: "<gold>🍎 Złote Jabłko"
+    slot: 37
+    limits:
+      default: 2
+      vip: 3
+      svip: 4
+
+  enchanted_golden_apple:
+    material: ENCHANTED_GOLDEN_APPLE
+    display-name: "<light_purple>✨ Zaczarowane Jabłko"
+    slot: 38
+    limits:
+      default: 1
+      vip: 2
+      svip: 3
+
+  ender_pearl:
+    material: ENDER_PEARL
+    display-name: "<dark_purple>🔮 Perła Końca"
+    slot: 39
+    limits:
+      default: 4
+      vip: 6
+      svip: 8
+
+  totem:
+    material: TOTEM_OF_UNDYING
+    display-name: "<yellow>🗿 Totem Nieśmiertelności"
+    slot: 40
+    limits:
+      default: 1
+      vip: 2
+      svip: 3
+
+  obsidian:
+    material: OBSIDIAN
+    display-name: "<dark_gray>🪨 Obsydian"
+    slot: 41
+    limits:
+      default: 16
+      vip: 24
+      svip: 32
+
+  # ════════════════════════════════════════════════════════
+  #  PROJECTILES & ICE
+  # ════════════════════════════════════════════════════════
+
+  arrow:
+    material: ARROW
+    display-name: "<gray>🏹 Strzały"
+    slot: 46
+    limits:
+      default: 64
+      vip: 96
+      svip: 128
+
+  snowball:
+    material: SNOWBALL
+    display-name: "<aqua>❄ Śnieżki"
+    slot: 47
+    limits:
+      default: 16
+      vip: 24
+      svip: 32
+
+  ice:
+    material: ICE
+    display-name: "<aqua>🧊 Lód"
+    slot: 48
+    limits:
+      default: 16
+      vip: 24
+      svip: 32
+
+  packed_ice:
+    material: PACKED_ICE
+    display-name: "<aqua>🧊 Lód Zbity"
+    slot: 50
+    limits:
+      default: 8
+      vip: 16
+      svip: 24
+
+  blue_ice:
+    material: BLUE_ICE
+    display-name: "<blue>💎 Niebieski Lód"
+    slot: 51
+    limits:
+      default: 4
+      vip: 8
+      svip: 16
+
+# ── GUI ──────────────────────────────────────────────────────────────────────
+gui:
+  title: "<dark_gray>⚙ <gold><bold>Schowek</bold> <dark_gray>— <gray>Twoje Limity"
+  rows: 6
+
+  fill-empty: true
+  fill-material: BLACK_STAINED_GLASS_PANE
+  fill-name: " "
+
+  take-all-slot: 49
+  take-all-material: CHEST
+  take-all-name: "<green><bold>✔ Dobierz wszystkie"
+  take-all-lore: "<gray>Pobiera wszystkie dostępne\n<gray>przedmioty z schowka."
+
+  close-slot: 45
+  close-material: BARRIER
+  close-name: "<red>✖ Zamknij"

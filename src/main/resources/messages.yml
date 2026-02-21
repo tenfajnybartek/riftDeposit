@@ -1,0 +1,59 @@
+# ──────────────────────────────────────────────────────────
+#  RiftDeposit  ·  messages.yml
+#  All strings use MiniMessage format.
+#  Available placeholders are listed next to each key.
+# ──────────────────────────────────────────────────────────
+
+prefix: "<dark_gray>[<gold><bold>Schowek</bold><dark_gray>] "
+
+deposit:
+  # <amount>, <item>
+  excess-moved: "<prefix><yellow>Przeniesiono <white><amount>x <item> <yellow>do schowka."
+  # <amount>, <item>
+  item-taken: "<prefix><green>Pobrano <white><amount>x <item><green> z schowka."
+  items-taken-all: "<prefix><green>Pobrano wszystkie dostępne przedmioty ze schowka."
+  deposit-empty: "<prefix><yellow>Schowek jest pusty."
+  nothing-to-take: "<prefix><yellow>Nie masz czego pobierać."
+  # <item>
+  at-limit: "<prefix><red>Już masz maksymalną ilość: <white><item><red>!"
+  no-space: "<prefix><red>Brak miejsca w ekwipunku! Zwolnij miejsce i spróbuj ponownie."
+
+errors:
+  no-permission: "<prefix><red>Nie masz uprawnień do tej komendy."
+  player-only: "<prefix><red>Ta komenda jest tylko dla graczy."
+  data-not-loaded: "<prefix><red>Twoje dane nie są jeszcze załadowane. Poczekaj chwilę."
+  unknown-subcommand: "<prefix><red>Nieznana subkomenda. Użyj <white>/rdadmin help<red>."
+
+admin:
+  reload-success: "<prefix><green>Konfiguracja przeładowana pomyślnie."
+  reload-fail: "<prefix><red>Błąd podczas przeładowania! Sprawdź konsolę."
+  # <player>
+  player-not-found: "<prefix><red>Nie znaleziono gracza: <white><player><red>."
+  # <player>
+  inspect-header: "<dark_gray>────── <gold>Schowek gracza <white><player> <dark_gray>──────"
+  # <key>, <amount>
+  inspect-line: " <gray>• <white><key><gray>: <yellow><amount>"
+  inspect-empty: " <gray>(schowek pusty)"
+  # <player>
+  clear-success: "<prefix><green>Schowek gracza <white><player><green> został wyczyszczony."
+  # <player>, <key>
+  clear-item-success: "<prefix><green>Usunięto przedmiot <white><key><green> ze schowka gracza <white><player><green>."
+  # <player>, <amount>, <key>
+  give-success: "<prefix><green>Dodano <white><amount>x <key><green> do schowka gracza <white><player><green>."
+  # <player>, <key>, <max>
+  give-over-limit: "<prefix><yellow>Uwaga: <white><player><yellow> ma teraz więcej niż limit (<white><max><yellow>) dla <white><key><yellow>."
+
+gui:
+  lore-separator: "<dark_gray>──────────────────"
+  # <stored>
+  lore-stored: "<gray>Przechowane: <white><stored>"
+  # <max>
+  lore-max: "<gray>Limit:        <white><max>"
+  # <in-inv>
+  lore-in-inventory: "<gray>W ekwipunku:  <white><in_inv>"
+  # <can-take>
+  lore-can-take-positive: "<gray>Możesz dobrać: <green><can_take>"
+  lore-can-take-zero: "<gray>Możesz dobrać: <red>0 <dark_gray>(limit osiągnięty)"
+  lore-hint-lmb: "<yellow>⬅ LPM <gray>— dobierz 1"
+  lore-hint-rmb: "<yellow>➡ PPM <gray>— dobierz wszystkie"
+  lore-empty: "<dark_gray>Brak przedmiotów w schowku."
