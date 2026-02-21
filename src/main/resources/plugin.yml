@@ -1,0 +1,6 @@
+name: riftDeposit
+version: '1.0.0'
+main: pl.tenfajnybartek.riftdeposit.base.DepositPlugin
+api-version: '1.21'
+authors: [ tenfajnybartek ]
+description: Plugin na gildie
