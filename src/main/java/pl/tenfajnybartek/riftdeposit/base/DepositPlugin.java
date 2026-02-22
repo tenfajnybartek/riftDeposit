@@ -1,5 +1,6 @@
 package pl.tenfajnybartek.riftdeposit.base;
 
+import org.bstats.bukkit.Metrics;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -26,6 +27,8 @@ public final class DepositPlugin extends JavaPlugin {
 
     @Override
     public void onEnable() {
+        int pluginId = 29687;
+        Metrics metrics = new Metrics(this, pluginId);
         saveDefaultConfig();
         saveResource("messages.yml", false);
 

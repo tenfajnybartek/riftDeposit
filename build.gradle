@@ -1,6 +1,6 @@
 plugins {
     id 'java'
-    id 'com.gradleup.shadow' version '8.3.0'
+    id 'com.gradleup.shadow' version '9.3.1'
 }
 
 group = 'pl.tenfajnybartek.riftdeposit'
@@ -31,15 +31,22 @@ dependencies {
 
     // MySQL JDBC driver
     implementation 'com.mysql:mysql-connector-j:8.3.0'
+
+    // bStats — metrics
+    implementation 'org.bstats:bstats-bukkit:3.1.0'
 }
 
 shadowJar {
     archiveClassifier.set('')
-    // Relocate to avoid conflicts with other plugins
-    relocate 'com.zaxxer.hikari',    'pl.tenfajnybartek.riftdeposit.libs.hikari'
-    relocate 'com.mysql',            'pl.tenfajnybartek.riftdeposit.libs.mysql'
-    relocate 'com.google.protobuf',  'pl.tenfajnybartek.riftdeposit.libs.protobuf'
 
+    // Relocate wszystkie shade'owane biblioteki pod własny namespace.
+    // Zapobiega konfliktom gdy inne pluginy używają tych samych bibliotek.
+    relocate 'com.zaxxer.hikari', 'pl.tenfajnybartek.riftdeposit.libs.hikari'
+    relocate 'com.mysql',         'pl.tenfajnybartek.riftdeposit.libs.mysql'
+    relocate 'com.google.protobuf','pl.tenfajnybartek.riftdeposit.libs.protobuf'
+    relocate 'org.bstats',        'pl.tenfajnybartek.riftdeposit.libs.bstats'
+
+    // MySQL connector musi trafić do jara w całości (zawiera service loaders)
     minimize {
         exclude(dependency('com.mysql:.*'))
     }
