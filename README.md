@@ -1,6 +1,6 @@
 <div align="center">
 
-# 📦 RiftDeposit
+# 📦 riftDeposit
 
 **Schowek z limitami przedmiotów dla serwerów EasyHC / HC**
 
